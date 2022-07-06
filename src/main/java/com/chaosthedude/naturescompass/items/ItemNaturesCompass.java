@@ -6,7 +6,6 @@ import com.chaosthedude.naturescompass.util.BiomeUtils;
 import com.chaosthedude.naturescompass.util.EnumCompassState;
 import com.chaosthedude.naturescompass.util.ItemUtils;
 import com.chaosthedude.naturescompass.util.SearchResult;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
@@ -26,264 +25,267 @@ import net.minecraft.world.biome.BiomeGenBase;
 
 public class ItemNaturesCompass extends Item {
 
-	public static final String NAME = "NaturesCompass";
+    public static final String NAME = "NaturesCompass";
 
-	private IIcon[] icons = new IIcon[32];
-	@SideOnly(Side.CLIENT)
-	private double rotation;
-	@SideOnly(Side.CLIENT)
-	private double rota;
-	@SideOnly(Side.CLIENT)
-	private long lastUpdateTick;
+    private IIcon[] icons = new IIcon[32];
 
-	public ItemNaturesCompass() {
-		super();
+    @SideOnly(Side.CLIENT)
+    private double rotation;
 
-		setCreativeTab(CreativeTabs.tabTools);
-		setUnlocalizedName(NaturesCompass.MODID + "." + NAME);
-	}
+    @SideOnly(Side.CLIENT)
+    private double rota;
 
-	@Override
-	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-		if (!player.isSneaking()) {
-			if (world.isRemote) {
-				NaturesCompass.network.sendToServer(new PacketRequestSync());
-			}
-			player.openGui(NaturesCompass.instance, 0, world, 0, 0, 0);
-		} else {
-			setState(stack, EnumCompassState.INACTIVE, player);
-		}
+    @SideOnly(Side.CLIENT)
+    private long lastUpdateTick;
 
-		return stack;
-	}
-	
-	@Override
-	public void registerIcons(IIconRegister iconRegister) {
-		for (int i = 0; i < 32; i++) {
-			String index = String.valueOf(i);
-			if (index.length() < 2) {
-				index = "0" + index;
-			}
-			icons[i] = iconRegister.registerIcon("naturescompass:natures_compass_" + index);
-		}
+    public ItemNaturesCompass() {
+        super();
 
-		itemIcon = iconRegister.registerIcon("naturescompass:natures_compass_00");
-	}
+        setCreativeTab(CreativeTabs.tabTools);
+        setUnlocalizedName(NaturesCompass.MODID + "." + NAME);
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(ItemStack stack, int renderPass) {
-		final Minecraft mc = Minecraft.getMinecraft();
-		final World world = mc.theWorld;
-		final EntityPlayer player = mc.thePlayer;
+    @Override
+    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+        if (!player.isSneaking()) {
+            if (world.isRemote) {
+                NaturesCompass.network.sendToServer(new PacketRequestSync());
+            }
+            player.openGui(NaturesCompass.instance, 0, world, 0, 0, 0);
+        } else {
+            setState(stack, EnumCompassState.INACTIVE, player);
+        }
 
-		if (world != null && player != null && stack != null) {
-			return icons[(int) apply(stack, world, player)];
-		}
+        return stack;
+    }
 
-		return itemIcon;
-	}
+    @Override
+    public void registerIcons(IIconRegister iconRegister) {
+        for (int i = 0; i < 32; i++) {
+            String index = String.valueOf(i);
+            if (index.length() < 2) {
+                index = "0" + index;
+            }
+            icons[i] = iconRegister.registerIcon("naturescompass:natures_compass_" + index);
+        }
 
-	@Override
-	public boolean requiresMultipleRenderPasses() {
-		return true;
-	}
+        itemIcon = iconRegister.registerIcon("naturescompass:natures_compass_00");
+    }
 
-	public void searchForBiome(World world, EntityPlayer player, int biomeID, int x, int z, ItemStack stack) {
-		setState(stack, EnumCompassState.SEARCHING, player);
-		setBiomeID(stack, biomeID, player);
-		final SearchResult result = BiomeUtils.searchForBiome(world, stack, BiomeGenBase.getBiome(biomeID), x, z);
-		if (result.found()) {
-			setFound(stack, result.getX(), result.getZ(), player);
-		} else {
-			setNotFound(stack, player, result.getRadius());
-		}
-	}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IIcon getIcon(ItemStack stack, int renderPass) {
+        final Minecraft mc = Minecraft.getMinecraft();
+        final World world = mc.theWorld;
+        final EntityPlayer player = mc.thePlayer;
 
-	public boolean isActive(ItemStack stack) {
-		if (ItemUtils.verifyNBT(stack)) {
-			return getState(stack) != EnumCompassState.INACTIVE;
-		}
+        if (world != null && player != null && stack != null) {
+            return icons[(int) apply(stack, world, player)];
+        }
 
-		return false;
-	}
+        return itemIcon;
+    }
 
-	public void setSearching(ItemStack stack, int biomeID, EntityPlayer player) {
-		if (ItemUtils.verifyNBT(stack)) {
-			stack.getTagCompound().setInteger("State", EnumCompassState.SEARCHING.getID());
-		}
-	}
+    @Override
+    public boolean requiresMultipleRenderPasses() {
+        return true;
+    }
 
-	public void setFound(ItemStack stack, int x, int z, EntityPlayer player) {
-		if (ItemUtils.verifyNBT(stack)) {
-			stack.getTagCompound().setInteger("State", EnumCompassState.FOUND.getID());
-			stack.getTagCompound().setInteger("FoundX", x);
-			stack.getTagCompound().setInteger("FoundZ", z);
-		}
-	}
+    public void searchForBiome(World world, EntityPlayer player, int biomeID, int x, int z, ItemStack stack) {
+        setState(stack, EnumCompassState.SEARCHING, player);
+        setBiomeID(stack, biomeID, player);
+        final SearchResult result = BiomeUtils.searchForBiome(world, stack, BiomeGenBase.getBiome(biomeID), x, z);
+        if (result.found()) {
+            setFound(stack, result.getX(), result.getZ(), player);
+        } else {
+            setNotFound(stack, player, result.getRadius());
+        }
+    }
 
-	public void setNotFound(ItemStack stack, EntityPlayer player, int searchRadius) {
-		if (ItemUtils.verifyNBT(stack)) {
-			stack.getTagCompound().setInteger("State", EnumCompassState.NOT_FOUND.getID());
-			stack.getTagCompound().setInteger("SearchRadius", searchRadius);
-		}
-	}
+    public boolean isActive(ItemStack stack) {
+        if (ItemUtils.verifyNBT(stack)) {
+            return getState(stack) != EnumCompassState.INACTIVE;
+        }
 
-	public void setInactive(ItemStack stack, EntityPlayer player) {
-		if (ItemUtils.verifyNBT(stack)) {
-			stack.getTagCompound().setInteger("State", EnumCompassState.INACTIVE.getID());
-		}
-	}
+        return false;
+    }
 
-	public void setState(ItemStack stack, EnumCompassState state, EntityPlayer player) {
-		if (ItemUtils.verifyNBT(stack)) {
-			stack.getTagCompound().setInteger("State", state.getID());
-		}
-	}
+    public void setSearching(ItemStack stack, int biomeID, EntityPlayer player) {
+        if (ItemUtils.verifyNBT(stack)) {
+            stack.getTagCompound().setInteger("State", EnumCompassState.SEARCHING.getID());
+        }
+    }
 
-	public void setFoundBiomeX(ItemStack stack, int x, EntityPlayer player) {
-		if (ItemUtils.verifyNBT(stack)) {
-			stack.getTagCompound().setInteger("FoundX", x);
-		}
-	}
+    public void setFound(ItemStack stack, int x, int z, EntityPlayer player) {
+        if (ItemUtils.verifyNBT(stack)) {
+            stack.getTagCompound().setInteger("State", EnumCompassState.FOUND.getID());
+            stack.getTagCompound().setInteger("FoundX", x);
+            stack.getTagCompound().setInteger("FoundZ", z);
+        }
+    }
 
-	public void setFoundBiomeZ(ItemStack stack, int z, EntityPlayer player) {
-		if (ItemUtils.verifyNBT(stack)) {
-			stack.getTagCompound().setInteger("FoundZ", z);
-		}
-	}
+    public void setNotFound(ItemStack stack, EntityPlayer player, int searchRadius) {
+        if (ItemUtils.verifyNBT(stack)) {
+            stack.getTagCompound().setInteger("State", EnumCompassState.NOT_FOUND.getID());
+            stack.getTagCompound().setInteger("SearchRadius", searchRadius);
+        }
+    }
 
-	public void setBiomeID(ItemStack stack, int biomeID, EntityPlayer player) {
-		if (ItemUtils.verifyNBT(stack)) {
-			stack.getTagCompound().setInteger("BiomeID", biomeID);
-		}
-	}
+    public void setInactive(ItemStack stack, EntityPlayer player) {
+        if (ItemUtils.verifyNBT(stack)) {
+            stack.getTagCompound().setInteger("State", EnumCompassState.INACTIVE.getID());
+        }
+    }
 
-	public void setSearchRadius(ItemStack stack, int searchRadius, EntityPlayer player) {
-		if (ItemUtils.verifyNBT(stack)) {
-			stack.getTagCompound().setInteger("SearchRadius", searchRadius);
-		}
-	}
+    public void setState(ItemStack stack, EnumCompassState state, EntityPlayer player) {
+        if (ItemUtils.verifyNBT(stack)) {
+            stack.getTagCompound().setInteger("State", state.getID());
+        }
+    }
 
-	public EnumCompassState getState(ItemStack stack) {
-		if (ItemUtils.verifyNBT(stack)) {
-			return EnumCompassState.fromID(stack.getTagCompound().getInteger("State"));
-		}
+    public void setFoundBiomeX(ItemStack stack, int x, EntityPlayer player) {
+        if (ItemUtils.verifyNBT(stack)) {
+            stack.getTagCompound().setInteger("FoundX", x);
+        }
+    }
 
-		return null;
-	}
+    public void setFoundBiomeZ(ItemStack stack, int z, EntityPlayer player) {
+        if (ItemUtils.verifyNBT(stack)) {
+            stack.getTagCompound().setInteger("FoundZ", z);
+        }
+    }
 
-	public int getFoundBiomeX(ItemStack stack) {
-		if (ItemUtils.verifyNBT(stack)) {
-			return stack.getTagCompound().getInteger("FoundX");
-		}
+    public void setBiomeID(ItemStack stack, int biomeID, EntityPlayer player) {
+        if (ItemUtils.verifyNBT(stack)) {
+            stack.getTagCompound().setInteger("BiomeID", biomeID);
+        }
+    }
 
-		return 0;
-	}
+    public void setSearchRadius(ItemStack stack, int searchRadius, EntityPlayer player) {
+        if (ItemUtils.verifyNBT(stack)) {
+            stack.getTagCompound().setInteger("SearchRadius", searchRadius);
+        }
+    }
 
-	public int getFoundBiomeZ(ItemStack stack) {
-		if (ItemUtils.verifyNBT(stack)) {
-			return stack.getTagCompound().getInteger("FoundZ");
-		}
+    public EnumCompassState getState(ItemStack stack) {
+        if (ItemUtils.verifyNBT(stack)) {
+            return EnumCompassState.fromID(stack.getTagCompound().getInteger("State"));
+        }
 
-		return 0;
-	}
+        return null;
+    }
 
-	public int getBiomeID(ItemStack stack) {
-		if (ItemUtils.verifyNBT(stack)) {
-			return stack.getTagCompound().getInteger("BiomeID");
-		}
+    public int getFoundBiomeX(ItemStack stack) {
+        if (ItemUtils.verifyNBT(stack)) {
+            return stack.getTagCompound().getInteger("FoundX");
+        }
 
-		return -1;
-	}
+        return 0;
+    }
 
-	public int getSearchRadius(ItemStack stack) {
-		if (ItemUtils.verifyNBT(stack)) {
-			return stack.getTagCompound().getInteger("SearchRadius");
-		}
+    public int getFoundBiomeZ(ItemStack stack) {
+        if (ItemUtils.verifyNBT(stack)) {
+            return stack.getTagCompound().getInteger("FoundZ");
+        }
 
-		return -1;
-	}
+        return 0;
+    }
 
-	public String getBiomeName(ItemStack stack) {
-		return BiomeUtils.getBiomeName(getBiomeID(stack));
-	}
+    public int getBiomeID(ItemStack stack) {
+        if (ItemUtils.verifyNBT(stack)) {
+            return stack.getTagCompound().getInteger("BiomeID");
+        }
 
-	public int getDistanceToBiome(EntityPlayer player, ItemStack stack) {
-		return (int) player.getDistance(getFoundBiomeX(stack), player.posY, getFoundBiomeZ(stack));
-	}
+        return -1;
+    }
 
-	@SideOnly(Side.CLIENT)
-	public int apply(ItemStack stack, World world, EntityLivingBase entityLiving) {
-		if (entityLiving == null && !stack.isOnItemFrame()) {
-			return 0;
-		} else {
-			final boolean entityExists = entityLiving != null;
-			final Entity entity = (Entity) (entityExists ? entityLiving : stack.getItemFrame());
-			if (world == null) {
-				world = entity.worldObj;
-			}
+    public int getSearchRadius(ItemStack stack) {
+        if (ItemUtils.verifyNBT(stack)) {
+            return stack.getTagCompound().getInteger("SearchRadius");
+        }
 
-			double rotation = entityExists ? (double) entity.rotationYaw : getFrameRotation((EntityItemFrame) entity);
-			rotation = rotation % 360.0D;
-			double adjusted = Math.PI - ((rotation - 90.0D) * 0.01745329238474369D - getAngle(world, entity, stack));
+        return -1;
+    }
 
-			if (entityExists) {
-				adjusted = wobble(world, adjusted);
-			}
+    public String getBiomeName(ItemStack stack) {
+        return BiomeUtils.getBiomeName(getBiomeID(stack));
+    }
 
-			final float f = ((float) (adjusted / (Math.PI * 2D)) % 1.0F + 1.0F % 1.0F);
-			return MathHelper.clamp_int(Math.round(((f * 32) + 16) % 32), 0, 31);
-		}
-	}
+    public int getDistanceToBiome(EntityPlayer player, ItemStack stack) {
+        return (int) player.getDistance(getFoundBiomeX(stack), player.posY, getFoundBiomeZ(stack));
+    }
 
-	@SideOnly(Side.CLIENT)
-	private double wobble(World world, double amount) {
-		if (world.getTotalWorldTime() != lastUpdateTick) {
-			lastUpdateTick = world.getTotalWorldTime();
-			double d0 = amount - rotation;
-			d0 = d0 % (Math.PI * 2D);
-			d0 = MathHelper.clamp_double(d0, -1.0D, 1.0D);
-			rota += d0 * 0.1D;
-			rota *= 0.8D;
-			rotation += rota;
-		}
+    @SideOnly(Side.CLIENT)
+    public int apply(ItemStack stack, World world, EntityLivingBase entityLiving) {
+        if (entityLiving == null && !stack.isOnItemFrame()) {
+            return 0;
+        } else {
+            final boolean entityExists = entityLiving != null;
+            final Entity entity = (Entity) (entityExists ? entityLiving : stack.getItemFrame());
+            if (world == null) {
+                world = entity.worldObj;
+            }
 
-		return rotation;
-	}
+            double rotation = entityExists ? (double) entity.rotationYaw : getFrameRotation((EntityItemFrame) entity);
+            rotation = rotation % 360.0D;
+            double adjusted = Math.PI - ((rotation - 90.0D) * 0.01745329238474369D - getAngle(world, entity, stack));
 
-	@SideOnly(Side.CLIENT)
-	private int clampAngle(int angle) {
-		angle = angle % 360;
+            if (entityExists) {
+                adjusted = wobble(world, adjusted);
+            }
 
-		if (angle >= 180) {
-			angle -= 360;
-		}
+            final float f = ((float) (adjusted / (Math.PI * 2D)) % 1.0F + 1.0F % 1.0F);
+            return MathHelper.clamp_int(Math.round(((f * 32) + 16) % 32), 0, 31);
+        }
+    }
 
-		if (angle < -180) {
-			angle += 360;
-		}
+    @SideOnly(Side.CLIENT)
+    private double wobble(World world, double amount) {
+        if (world.getTotalWorldTime() != lastUpdateTick) {
+            lastUpdateTick = world.getTotalWorldTime();
+            double d0 = amount - rotation;
+            d0 = d0 % (Math.PI * 2D);
+            d0 = MathHelper.clamp_double(d0, -1.0D, 1.0D);
+            rota += d0 * 0.1D;
+            rota *= 0.8D;
+            rotation += rota;
+        }
 
-		return angle;
-	}
+        return rotation;
+    }
 
-	@SideOnly(Side.CLIENT)
-	private double getFrameRotation(EntityItemFrame itemFrame) {
-		return (double) clampAngle(180 + itemFrame.hangingDirection * 90); // itemFrame.facingDirection.getHorizontalIndex()
-																			// *
-																			// 90);
-	}
+    @SideOnly(Side.CLIENT)
+    private int clampAngle(int angle) {
+        angle = angle % 360;
 
-	@SideOnly(Side.CLIENT)
-	private double getAngle(World world, Entity entity, ItemStack stack) {
-		ChunkCoordinates pos;
-		if (getState(stack) == EnumCompassState.FOUND) {
-			pos = new ChunkCoordinates(getFoundBiomeX(stack), 0, getFoundBiomeZ(stack));
-		} else {
-			pos = world.getSpawnPoint();
-		}
+        if (angle >= 180) {
+            angle -= 360;
+        }
 
-		return Math.atan2((double) pos.posZ - entity.posZ, (double) pos.posX - entity.posX);
-	}
+        if (angle < -180) {
+            angle += 360;
+        }
 
+        return angle;
+    }
+
+    @SideOnly(Side.CLIENT)
+    private double getFrameRotation(EntityItemFrame itemFrame) {
+        return (double)
+                clampAngle(180 + itemFrame.hangingDirection * 90); // itemFrame.facingDirection.getHorizontalIndex()
+        // *
+        // 90);
+    }
+
+    @SideOnly(Side.CLIENT)
+    private double getAngle(World world, Entity entity, ItemStack stack) {
+        ChunkCoordinates pos;
+        if (getState(stack) == EnumCompassState.FOUND) {
+            pos = new ChunkCoordinates(getFoundBiomeX(stack), 0, getFoundBiomeZ(stack));
+        } else {
+            pos = world.getSpawnPoint();
+        }
+
+        return Math.atan2((double) pos.posZ - entity.posZ, (double) pos.posX - entity.posX);
+    }
 }
