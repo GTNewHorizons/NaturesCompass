@@ -6,12 +6,12 @@ import net.minecraft.world.biome.BiomeGenBase;
 public class CategoryTemperature implements ISortingCategory {
 
     @Override
-    public int compare(Object biome1, Object biome2) {
-        return Float.compare(((BiomeGenBase) biome1).temperature, ((BiomeGenBase) biome2).temperature);
+    public int compare(BiomeGenBase biome1, BiomeGenBase biome2) {
+        return Float.compare(biome1.temperature, biome2.temperature);
     }
 
     @Override
-    public Object getValue(BiomeGenBase biome) {
+    public Float getValue(BiomeGenBase biome) {
         return biome.temperature;
     }
 

@@ -13,10 +13,17 @@ string.naturescompass.sortBy=Sort By
 string.naturescompass.teleport=Teleport
 
 # STRINGS - CLIMATES
-string.naturescompass.cold=Cold
-string.naturescompass.medium=Medium
 string.naturescompass.ocean=Ocean
+string.naturescompass.hellish=Hellish
+string.naturescompass.hot=Hot
 string.naturescompass.warm=Warm
+string.naturescompass.normal=Normal
+string.naturescompass.cold=Cold
+string.naturescompass.icy=Icy
+
+# STRINGS - HUMIDITY
+string.naturescompass.damp=Damp
+string.naturescompass.arid=Arid
 
 # STRINGS - RANGE
 string.naturescompass.none=None
@@ -40,11 +47,12 @@ string.naturescompass.status=Status
 string.naturescompass.baseHeight=Base Height
 string.naturescompass.climate=Climate
 string.naturescompass.heightVariation=Height Variation
-string.naturescompass.highHumidity=High Humidity
 string.naturescompass.name=Name
 string.naturescompass.precipitation=Precipitation
 string.naturescompass.rainfall=Rainfall
+string.naturescompass.humidity=Humidity
 string.naturescompass.temperature=Temperature
+string.naturescompass.tags=Tags
 
 # STRINGS - PRECIPITATION
 string.naturescompass.snow=Snow

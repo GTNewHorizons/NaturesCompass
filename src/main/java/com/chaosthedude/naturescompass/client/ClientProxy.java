@@ -7,6 +7,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void registerEvents() {
+        super.registerEvents();
         FMLCommonHandler.instance().bus().register(new RenderTickHandler());
     }
 }

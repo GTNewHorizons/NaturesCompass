@@ -6,18 +6,18 @@ import net.minecraft.world.biome.BiomeGenBase;
 public class CategoryRainfall implements ISortingCategory {
 
     @Override
-    public int compare(Object biome1, Object biome2) {
-        return Float.compare(((BiomeGenBase) biome1).rainfall, ((BiomeGenBase) biome2).rainfall);
+    public int compare(BiomeGenBase biome1, BiomeGenBase biome2) {
+        return Float.compare(biome1.rainfall, biome2.rainfall);
     }
 
     @Override
-    public Object getValue(BiomeGenBase biome) {
+    public Float getValue(BiomeGenBase biome) {
         return biome.rainfall;
     }
 
     @Override
     public ISortingCategory next() {
-        return new CategoryName();
+        return new CategoryTags();
     }
 
     @Override

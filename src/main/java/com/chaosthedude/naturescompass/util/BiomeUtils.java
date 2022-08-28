@@ -1,13 +1,14 @@
 package com.chaosthedude.naturescompass.util;
 
-import com.chaosthedude.naturescompass.NaturesCompass;
 import com.chaosthedude.naturescompass.config.ConfigHandler;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.BiomeDictionary;
 
 public class BiomeUtils {
 
@@ -20,36 +21,6 @@ public class BiomeUtils {
         }
 
         return biomes;
-    }
-
-    public static SearchResult searchForBiome(
-            World world, ItemStack stack, BiomeGenBase biome, int startX, int startY) {
-        if (stack.getItem() != NaturesCompass.naturesCompass) {
-            return null;
-        }
-
-        final int sampleSpace = ConfigHandler.sampleSpace;
-        final int maxDist = ConfigHandler.maxSearchDistance;
-        if (maxDist <= 0 || sampleSpace <= 0) {
-            return new SearchResult(0, 0, maxDist, false);
-        }
-
-        final double adjustedSampleSpace = sampleSpace / Math.sqrt(Math.PI);
-        final double adjustedPi = 2 * Math.sqrt(Math.PI);
-        double dist = 0;
-        for (int i = 0; dist < maxDist; i++) {
-            double root = Math.sqrt(i);
-            dist = adjustedSampleSpace * root;
-            double x = startX + (dist * Math.sin(adjustedPi * root));
-            double z = startY + (dist * Math.cos(adjustedPi * root));
-
-            final BiomeGenBase biomeAtSample = world.getBiomeGenForCoords((int) x, (int) z);
-            if (biomeAtSample == biome) {
-                return new SearchResult((int) x, (int) z, maxDist, true);
-            }
-        }
-
-        return new SearchResult(0, 0, maxDist, false);
     }
 
     public static int getDistanceToBiome(EntityPlayer player, int x, int z) {
@@ -82,6 +53,47 @@ public class BiomeUtils {
 
     public static String getBiomeName(int biomeID) {
         return getBiomeName(BiomeGenBase.getBiome(biomeID));
+    }
+
+    public static List<String> getListBiomeTags(BiomeGenBase biome) {
+        return Stream.of(BiomeDictionary.getTypesForBiome(biome))
+                .map(BiomeDictionary.Type::name)
+                .map(String::toLowerCase)
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    public static String getBiomeTags(BiomeGenBase biome) {
+        return Stream.of(BiomeDictionary.getTypesForBiome(biome))
+                .map(BiomeDictionary.Type::name)
+                .map(s -> s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase())
+                .sorted()
+                .collect(Collectors.joining(", "));
+    }
+
+    public static String getBiomeClimate(BiomeGenBase biome) {
+
+        if (getListBiomeTags(biome).contains("nether")) {
+            return I18n.format("string.naturescompass.hellish");
+        } else if (biome.temperature > 1.0f) {
+            return I18n.format("string.naturescompass.hot");
+        } else if (biome.temperature > 0.85f) {
+            return I18n.format("string.naturescompass.warm");
+        } else if (biome.temperature > 0.35f) {
+            return I18n.format("string.naturescompass.normal");
+        } else if (biome.temperature > 0.0f) {
+            return I18n.format("string.naturescompass.cold");
+        }
+        return I18n.format("string.naturescompass.icy");
+    }
+
+    public static String getBiomeHumidity(BiomeGenBase biome) {
+        if (biome.rainfall > 0.85f) {
+            return I18n.format("string.naturescompass.damp");
+        } else if (biome.rainfall >= 0.3f) {
+            return I18n.format("string.naturescompass.normal");
+        }
+        return I18n.format("string.naturescompass.arid");
     }
 
     public static boolean biomeIsBlacklisted(BiomeGenBase biome) {
