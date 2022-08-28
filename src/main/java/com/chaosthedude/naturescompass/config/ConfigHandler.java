@@ -50,7 +50,7 @@ public class ConfigHandler {
         maxSamples = loadInt(Configuration.CATEGORY_GENERAL, "naturescompass.maxSamples", comment, maxSamples);
 
         comment =
-                "A list of biomes that the compass will not be able to search for. Specify by resource location (ex: minecraft:ocean) or ID (ex: 0)";
+                "A list of biomes that the compass will not be able to search for. Specify by resource location (ex: Ocean) or ID (ex: 0)";
         biomeBlacklist = loadStringArray(
                 Configuration.CATEGORY_GENERAL, "naturescompass.biomeBlacklist", comment, biomeBlacklist);
 
