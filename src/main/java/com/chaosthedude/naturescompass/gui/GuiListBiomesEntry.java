@@ -49,15 +49,7 @@ public class GuiListBiomesEntry implements GuiListExtended.IGuiListEntry {
         Object value = guiNaturesCompass.getSortingCategory().getValue(biome);
         if (value == null) {
             title = I18n.format("string.naturescompass.climate");
-            if (biome.getTempCategory() == BiomeGenBase.TempCategory.COLD) {
-                value = I18n.format("string.naturescompass.cold");
-            } else if (biome.getTempCategory() == BiomeGenBase.TempCategory.OCEAN) {
-                value = I18n.format("string.naturescompass.ocean");
-            } else if (biome.getTempCategory() == BiomeGenBase.TempCategory.WARM) {
-                value = I18n.format("string.naturescompass.warm");
-            } else {
-                value = I18n.format("string.naturescompass.medium");
-            }
+            value = BiomeUtils.getBiomeClimate(biome);
         }
 
         mc.fontRenderer.drawString(BiomeUtils.getBiomeName(biome), x + 1, y + 1, 0xffffff);
@@ -72,10 +64,7 @@ public class GuiListBiomesEntry implements GuiListExtended.IGuiListEntry {
     @Override
     public boolean mousePressed(int slotIndex, int mouseX, int mouseY, int mouseEvent, int relativeX, int relativeY) {
         biomesList.selectBiome(slotIndex);
-        if (relativeX <= 32 && relativeX < 32) {
-            selectBiome();
-            return true;
-        } else if (Minecraft.getSystemTime() - lastClickTime < 250L) {
+        if (Minecraft.getSystemTime() - lastClickTime < 250L) {
             selectBiome();
             return true;
         }

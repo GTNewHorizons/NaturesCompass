@@ -18,6 +18,7 @@ import net.minecraft.item.ItemStack;
 public class RenderTickHandler {
 
     private static final Minecraft mc = Minecraft.getMinecraft();
+    public static int maxLineNum = 0;
 
     @SubscribeEvent
     public void onRenderTick(RenderTickEvent event) {
@@ -27,6 +28,7 @@ public class RenderTickHandler {
                 && !mc.gameSettings.showDebugInfo
                 && (mc.currentScreen == null
                         || (ConfigHandler.displayWithChatOpen && mc.currentScreen instanceof GuiChat))) {
+
             final EntityPlayer player = mc.thePlayer;
             final ItemStack stack = player.getHeldItem();
             if (stack != null && stack.getItem() == NaturesCompass.naturesCompass) {
@@ -41,6 +43,7 @@ public class RenderTickHandler {
                             I18n.format("string.naturescompass.biome"), 5, 0, 0xFFFFFF, 3);
                     RenderUtils.drawLineOffsetStringOnHUD(
                             BiomeUtils.getBiomeName(compass.getBiomeID(stack)), 5, 0, 0xAAAAAA, 4);
+                    maxLineNum = 4;
                 } else if (compass.getState(stack) == EnumCompassState.FOUND) {
                     RenderUtils.drawLineOffsetStringOnHUD(
                             I18n.format("string.naturescompass.status"), 5, 0, 0xFFFFFF, 0);
@@ -66,6 +69,7 @@ public class RenderTickHandler {
                             0,
                             0xAAAAAA,
                             10);
+                    maxLineNum = 10;
                 } else if (compass.getState(stack) == EnumCompassState.NOT_FOUND) {
                     RenderUtils.drawLineOffsetStringOnHUD(
                             I18n.format("string.naturescompass.status"), 5, 0, 0xFFFFFF, 0);
@@ -81,6 +85,7 @@ public class RenderTickHandler {
                             I18n.format("string.naturescompass.radius"), 5, 0, 0xFFFFFF, 6);
                     RenderUtils.drawLineOffsetStringOnHUD(
                             String.valueOf(compass.getSearchRadius(stack)), 5, 0, 0xAAAAAA, 7);
+                    maxLineNum = 7;
                 }
             }
         }

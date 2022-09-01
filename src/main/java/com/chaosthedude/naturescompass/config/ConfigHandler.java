@@ -1,6 +1,7 @@
 package com.chaosthedude.naturescompass.config;
 
 import com.chaosthedude.naturescompass.NaturesCompass;
+import com.chaosthedude.naturescompass.client.EnumOverlaySide;
 import com.google.common.collect.Lists;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -16,10 +17,12 @@ public class ConfigHandler {
 
     public static int maxSearchDistance = 10000;
     public static int sampleSpace = 64;
+    public static int maxSamples = 50000;
     public static String[] biomeBlacklist = {};
     public static boolean displayWithChatOpen = true;
     public static boolean fixBiomeNames = true;
     public static int lineOffset = 1;
+    public static EnumOverlaySide overlaySide = EnumOverlaySide.BOTTOMRIGHT;
 
     public static void loadConfig(File configFile) {
         config = new Configuration(configFile);
@@ -43,8 +46,11 @@ public class ConfigHandler {
         sampleSpace =
                 loadInt(Configuration.CATEGORY_GENERAL, "naturescompass.sampleSpaceModifier", comment, sampleSpace);
 
+        comment = "The maximum samples to be taken when searching for a biome.";
+        maxSamples = loadInt(Configuration.CATEGORY_GENERAL, "naturescompass.maxSamples", comment, maxSamples);
+
         comment =
-                "A list of biomes that the compass will not be able to search for. Both biome names and numerical biome IDs are accepted.";
+                "A list of biomes that the compass will not be able to search for. Specify by resource location (ex: Ocean) or ID (ex: 0)";
         biomeBlacklist = loadStringArray(
                 Configuration.CATEGORY_GENERAL, "naturescompass.biomeBlacklist", comment, biomeBlacklist);
 
@@ -56,6 +62,9 @@ public class ConfigHandler {
 
         comment = "The line offset for information rendered on the HUD.";
         lineOffset = loadInt("client", "naturescompass.lineOffset", comment, lineOffset);
+
+        comment = "The side for information rendered on the HUD. Ex: TOPLEFT, BOTTOMRIGHT";
+        overlaySide = loadOverlaySide("client", "naturescompass.overlaySide", comment, overlaySide);
 
         if (config.hasChanged()) {
             config.save();
@@ -80,8 +89,14 @@ public class ConfigHandler {
         return prop.getBoolean(def);
     }
 
-    public static String[] loadStringArray(String category, String comment, String name, String[] def) {
-        Property prop = config.get(category, name, def);
+    public static EnumOverlaySide loadOverlaySide(String category, String name, String comment, EnumOverlaySide def) {
+        final Property prop = config.get(category, name, def.toString());
+        prop.comment = comment;
+        return EnumOverlaySide.fromString(prop.getString());
+    }
+
+    public static String[] loadStringArray(String category, String name, String comment, String[] def) {
+        final Property prop = config.get(category, name, def);
         prop.comment = comment;
         return prop.getStringList();
     }

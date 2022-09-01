@@ -4,25 +4,25 @@ import com.chaosthedude.naturescompass.util.BiomeUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.world.biome.BiomeGenBase;
 
-public class CategoryName implements ISortingCategory {
+public class CategoryTags implements ISortingCategory {
 
     @Override
     public int compare(BiomeGenBase biome1, BiomeGenBase biome2) {
-        return BiomeUtils.getBiomeName(biome1).compareTo(BiomeUtils.getBiomeName(biome2));
+        return getValue(biome1).compareTo(getValue(biome2));
     }
 
     @Override
-    public Object getValue(BiomeGenBase biome) {
-        return null;
+    public String getValue(BiomeGenBase biome) {
+        return BiomeUtils.getBiomeTags(biome);
     }
 
     @Override
     public ISortingCategory next() {
-        return new CategoryBaseHeight();
+        return new CategoryName();
     }
 
     @Override
     public String getLocalizedName() {
-        return I18n.format("string.naturescompass.name");
+        return I18n.format("string.naturescompass.tags");
     }
 }
