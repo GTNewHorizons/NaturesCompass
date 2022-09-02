@@ -137,11 +137,14 @@ public class GuiNaturesCompass extends GuiScreen {
     }
 
     public void updateBiomes() {
-        if ((natureCompass.getState(stack) == EnumCompassState.INACTIVE) || (BiomeSearchWorker.oldDimensionId != world.provider.dimensionId)) {
+        if ((natureCompass.getState(stack) == EnumCompassState.INACTIVE)
+                || (BiomeSearchWorker.oldDimensionId != world.provider.dimensionId)) {
             BiomeSearchWorker.completedSearch = false;
             BiomeSearchWorker.availableBiomes.clear();
         }
-        if (BiomeSearchWorker.completedSearch && (BiomeSearchWorker.oldDimensionId == world.provider.dimensionId) && !searchTextField.isFocused()) {
+        if (BiomeSearchWorker.completedSearch
+                && (BiomeSearchWorker.oldDimensionId == world.provider.dimensionId)
+                && !searchTextField.isFocused()) {
             allowedBiomes = biomesMatchingSearch = new ArrayList<BiomeGenBase>(BiomeSearchWorker.availableBiomes);
             selectionList.refreshList();
         }
