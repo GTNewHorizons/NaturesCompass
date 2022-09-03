@@ -28,7 +28,8 @@ public class BiomeSearchWorker implements WorldWorkerManager.IWorker {
     public boolean finished;
     public int lastRadiusThreshold;
     public static Set<BiomeGenBase> availableBiomes = new HashSet<BiomeGenBase>();
-    public static int oldDimensionId;
+    public static int oldDimensionId = 0;
+    public static int newDimensionId;
     public static boolean completedSearch = false;
 
     public BiomeSearchWorker(
@@ -47,11 +48,16 @@ public class BiomeSearchWorker implements WorldWorkerManager.IWorker {
         direction = EnumFacing.UP;
         finished = false;
         lastRadiusThreshold = 0;
-        oldDimensionId = world.provider.dimensionId;
+        newDimensionId = world.provider.dimensionId;
     }
 
     public void start() {
         if (stack != null && stack.getItem() == NaturesCompass.naturesCompass) {
+            if (!completedSearch || (oldDimensionId != newDimensionId)) {
+                completedSearch = false;
+                oldDimensionId = newDimensionId;
+                availableBiomes.clear();
+            }
             if (maxDistance > 0 && sampleSpace > 0) {
                 NaturesCompass.logger.info(
                         "Starting search: " + sampleSpace + " sample space, " + maxDistance + " max distance");

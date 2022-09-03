@@ -69,7 +69,7 @@ public class GuiNaturesCompass extends GuiScreen {
         searchTextField.updateCursorCounter();
         teleportButton.visible = NaturesCompass.canTeleport || PlayerUtils.cheatModeEnabled(player);
         teleportButton.enabled = natureCompass.getState(stack) == EnumCompassState.FOUND;
-        updateBiomes();
+        updateBiomesEntry();
     }
 
     @Override
@@ -136,15 +136,11 @@ public class GuiNaturesCompass extends GuiScreen {
         mc.displayGuiScreen(null);
     }
 
-    public void updateBiomes() {
-        if ((natureCompass.getState(stack) == EnumCompassState.INACTIVE)
-                || (BiomeSearchWorker.oldDimensionId != world.provider.dimensionId)) {
-            BiomeSearchWorker.completedSearch = false;
-            BiomeSearchWorker.availableBiomes.clear();
-        }
+    public void updateBiomesEntry() {
         if (BiomeSearchWorker.completedSearch
                 && (BiomeSearchWorker.oldDimensionId == world.provider.dimensionId)
-                && !searchTextField.isFocused()) {
+                && !searchTextField.isFocused()
+                && (BiomeSearchWorker.availableBiomes != null)) {
             allowedBiomes = biomesMatchingSearch = new ArrayList<BiomeGenBase>(BiomeSearchWorker.availableBiomes);
             selectionList.refreshList();
         }
