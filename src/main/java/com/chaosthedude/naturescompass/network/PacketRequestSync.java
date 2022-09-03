@@ -1,5 +1,6 @@
 package com.chaosthedude.naturescompass.network;
 
+import com.chaosthedude.naturescompass.util.BiomeSearchWorker;
 import com.chaosthedude.naturescompass.util.PlayerUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -20,7 +21,11 @@ public class PacketRequestSync implements IMessage {
         @Override
         public IMessage onMessage(PacketRequestSync packet, MessageContext ctx) {
             final boolean canTeleport = PlayerUtils.canTeleport(ctx.getServerHandler().playerEntity);
-            return new PacketSync(canTeleport);
+            return new PacketSync(
+                    canTeleport,
+                    BiomeSearchWorker.availableBiomes,
+                    BiomeSearchWorker.oldDimensionId,
+                    BiomeSearchWorker.completedSearch);
         }
     }
 }

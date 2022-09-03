@@ -6,6 +6,7 @@ import com.chaosthedude.naturescompass.network.PacketCompassSearch;
 import com.chaosthedude.naturescompass.network.PacketTeleport;
 import com.chaosthedude.naturescompass.sorting.CategoryName;
 import com.chaosthedude.naturescompass.sorting.ISortingCategory;
+import com.chaosthedude.naturescompass.util.BiomeSearchWorker;
 import com.chaosthedude.naturescompass.util.BiomeUtils;
 import com.chaosthedude.naturescompass.util.EnumCompassState;
 import com.chaosthedude.naturescompass.util.PlayerUtils;
@@ -68,6 +69,7 @@ public class GuiNaturesCompass extends GuiScreen {
         searchTextField.updateCursorCounter();
         teleportButton.visible = NaturesCompass.canTeleport || PlayerUtils.cheatModeEnabled(player);
         teleportButton.enabled = natureCompass.getState(stack) == EnumCompassState.FOUND;
+        updateBiomesEntry();
     }
 
     @Override
@@ -132,6 +134,16 @@ public class GuiNaturesCompass extends GuiScreen {
         NaturesCompass.network.sendToServer(
                 new PacketCompassSearch(biome.biomeID, (int) player.posX, (int) player.posZ));
         mc.displayGuiScreen(null);
+    }
+
+    public void updateBiomesEntry() {
+        if (BiomeSearchWorker.completedSearch
+                && (BiomeSearchWorker.oldDimensionId == world.provider.dimensionId)
+                && !searchTextField.isFocused()
+                && (BiomeSearchWorker.availableBiomes != null)) {
+            allowedBiomes = biomesMatchingSearch = new ArrayList<BiomeGenBase>(BiomeSearchWorker.availableBiomes);
+            selectionList.refreshList();
+        }
     }
 
     public void teleport() {

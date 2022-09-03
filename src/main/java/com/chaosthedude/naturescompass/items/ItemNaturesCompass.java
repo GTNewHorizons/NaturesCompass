@@ -54,6 +54,7 @@ public class ItemNaturesCompass extends Item {
             player.openGui(NaturesCompass.instance, 0, world, 0, 0, 0);
         } else {
             setState(stack, EnumCompassState.INACTIVE, player);
+            BiomeSearchWorker.completedSearch = false;
         }
 
         return stack;

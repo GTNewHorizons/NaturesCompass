@@ -3,6 +3,8 @@ package com.chaosthedude.naturescompass.util;
 import com.chaosthedude.naturescompass.NaturesCompass;
 import com.chaosthedude.naturescompass.config.ConfigHandler;
 import com.chaosthedude.naturescompass.items.ItemNaturesCompass;
+import java.util.HashSet;
+import java.util.Set;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -25,6 +27,10 @@ public class BiomeSearchWorker implements WorldWorkerManager.IWorker {
     public int length;
     public boolean finished;
     public int lastRadiusThreshold;
+    public static Set<BiomeGenBase> availableBiomes = new HashSet<BiomeGenBase>();
+    public static int oldDimensionId = 0;
+    public static int newDimensionId;
+    public static boolean completedSearch = false;
 
     public BiomeSearchWorker(
             World world, EntityPlayer player, ItemStack stack, BiomeGenBase biome, int startX, int startZ) {
@@ -42,10 +48,16 @@ public class BiomeSearchWorker implements WorldWorkerManager.IWorker {
         direction = EnumFacing.UP;
         finished = false;
         lastRadiusThreshold = 0;
+        newDimensionId = world.provider.dimensionId;
     }
 
     public void start() {
         if (stack != null && stack.getItem() == NaturesCompass.naturesCompass) {
+            if (!completedSearch || (oldDimensionId != newDimensionId)) {
+                completedSearch = false;
+                oldDimensionId = newDimensionId;
+                availableBiomes.clear();
+            }
             if (maxDistance > 0 && sampleSpace > 0) {
                 NaturesCompass.logger.info(
                         "Starting search: " + sampleSpace + " sample space, " + maxDistance + " max distance");
@@ -75,6 +87,7 @@ public class BiomeSearchWorker implements WorldWorkerManager.IWorker {
             }
 
             final BiomeGenBase biomeAtPos = world.getBiomeGenForCoordsBody(x, z);
+            availableBiomes.add(biomeAtPos);
             if (biomeAtPos == biome) {
                 finish(true);
                 return false;
@@ -114,6 +127,7 @@ public class BiomeSearchWorker implements WorldWorkerManager.IWorker {
             } else {
                 NaturesCompass.logger.info("Search failed: " + getRadius() + " radius, " + samples + " samples");
                 ((ItemNaturesCompass) stack.getItem()).setNotFound(stack, player, roundRadius(getRadius(), 500));
+                completedSearch = true;
             }
         } else {
             NaturesCompass.logger.error("Invalid compass after search");

@@ -16,8 +16,8 @@ public class ConfigHandler {
     public static Configuration config;
 
     public static int maxSearchDistance = 10000;
-    public static int sampleSpace = 64;
-    public static int maxSamples = 50000;
+    public static int sampleSpace = 32;
+    public static int maxSamples = 150000;
     public static String[] biomeBlacklist = {};
     public static boolean displayWithChatOpen = true;
     public static boolean fixBiomeNames = true;
