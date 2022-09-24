@@ -15,15 +15,15 @@ string.naturescompass.teleport=传送
 # STRINGS - CLIMATES
 string.naturescompass.ocean=海洋
 string.naturescompass.hellish=地狱
-string.naturescompass.hot=炙热
+string.naturescompass.hot=炎热
 string.naturescompass.warm=温暖
-string.naturescompass.normal=普通
+string.naturescompass.normal=正常
 string.naturescompass.cold=寒冷
-string.naturescompass.icy=严寒
+string.naturescompass.icy=酷寒
 
 # STRINGS - HUMIDITY
-string.naturescompass.damp=潮湿
-string.naturescompass.arid=干旱
+string.naturescompass.damp=湿润
+string.naturescompass.arid=干燥
 
 # STRINGS - RANGE
 string.naturescompass.none=无
