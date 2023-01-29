@@ -1,14 +1,16 @@
 package com.chaosthedude.naturescompass.util;
 
-import com.chaosthedude.naturescompass.config.ConfigHandler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
+
+import com.chaosthedude.naturescompass.config.ConfigHandler;
 
 public class BiomeUtils {
 
@@ -56,18 +58,13 @@ public class BiomeUtils {
     }
 
     public static List<String> getListBiomeTags(BiomeGenBase biome) {
-        return Stream.of(BiomeDictionary.getTypesForBiome(biome))
-                .map(BiomeDictionary.Type::name)
-                .map(String::toLowerCase)
-                .sorted()
-                .collect(Collectors.toList());
+        return Stream.of(BiomeDictionary.getTypesForBiome(biome)).map(BiomeDictionary.Type::name)
+                .map(String::toLowerCase).sorted().collect(Collectors.toList());
     }
 
     public static String getBiomeTags(BiomeGenBase biome) {
-        return Stream.of(BiomeDictionary.getTypesForBiome(biome))
-                .map(BiomeDictionary.Type::name)
-                .map(s -> s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase())
-                .sorted()
+        return Stream.of(BiomeDictionary.getTypesForBiome(biome)).map(BiomeDictionary.Type::name)
+                .map(s -> s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase()).sorted()
                 .collect(Collectors.joining(", "));
     }
 
@@ -98,8 +95,7 @@ public class BiomeUtils {
 
     public static boolean biomeIsBlacklisted(BiomeGenBase biome) {
         final List<String> biomeBlacklist = ConfigHandler.getBiomeBlacklist();
-        return biomeBlacklist.contains(String.valueOf(biome.biomeID))
-                || biomeBlacklist.contains(getBiomeName(biome))
+        return biomeBlacklist.contains(String.valueOf(biome.biomeID)) || biomeBlacklist.contains(getBiomeName(biome))
                 || biomeBlacklist.contains(biome.biomeName);
     }
 }

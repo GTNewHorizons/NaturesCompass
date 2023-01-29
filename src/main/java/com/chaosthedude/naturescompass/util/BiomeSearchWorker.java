@@ -1,15 +1,17 @@
 package com.chaosthedude.naturescompass.util;
 
-import com.chaosthedude.naturescompass.NaturesCompass;
-import com.chaosthedude.naturescompass.config.ConfigHandler;
-import com.chaosthedude.naturescompass.items.ItemNaturesCompass;
 import java.util.HashSet;
 import java.util.Set;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+
+import com.chaosthedude.naturescompass.NaturesCompass;
+import com.chaosthedude.naturescompass.config.ConfigHandler;
+import com.chaosthedude.naturescompass.items.ItemNaturesCompass;
 
 public class BiomeSearchWorker implements WorldWorkerManager.IWorker {
 
@@ -32,8 +34,8 @@ public class BiomeSearchWorker implements WorldWorkerManager.IWorker {
     public static int newDimensionId;
     public static boolean completedSearch = false;
 
-    public BiomeSearchWorker(
-            World world, EntityPlayer player, ItemStack stack, BiomeGenBase biome, int startX, int startZ) {
+    public BiomeSearchWorker(World world, EntityPlayer player, ItemStack stack, BiomeGenBase biome, int startX,
+            int startZ) {
         this.world = world;
         this.player = player;
         this.stack = stack;
@@ -59,8 +61,8 @@ public class BiomeSearchWorker implements WorldWorkerManager.IWorker {
                 availableBiomes.clear();
             }
             if (maxDistance > 0 && sampleSpace > 0) {
-                NaturesCompass.logger.info(
-                        "Starting search: " + sampleSpace + " sample space, " + maxDistance + " max distance");
+                NaturesCompass.logger
+                        .info("Starting search: " + sampleSpace + " sample space, " + maxDistance + " max distance");
                 WorldWorkerManager.addWorker(this);
             } else {
                 finish(false);

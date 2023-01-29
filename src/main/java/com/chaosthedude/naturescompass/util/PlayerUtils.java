@@ -1,9 +1,10 @@
 package com.chaosthedude.naturescompass.util;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+
+import cpw.mods.fml.common.FMLCommonHandler;
 
 public class PlayerUtils {
 

@@ -4,6 +4,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.MathHelper;
+
 import org.lwjgl.opengl.GL11;
 
 public class GuiTransparentTextField extends GuiTextField {
@@ -51,8 +52,7 @@ public class GuiTransparentTextField extends GuiTextField {
                 j1 = fontRenderer.drawStringWithShadow(s1, l, i1, i);
             }
 
-            boolean flag2 =
-                    getCursorPosition() < getText().length() || getText().length() >= getMaxStringLength();
+            boolean flag2 = getCursorPosition() < getText().length() || getText().length() >= getMaxStringLength();
             int k1 = j1;
 
             if (!flag) {
@@ -137,8 +137,7 @@ public class GuiTransparentTextField extends GuiTextField {
             int k = s.length() + pseudoLineScrollOffset;
 
             if (position == pseudoLineScrollOffset) {
-                pseudoLineScrollOffset -=
-                        fontRenderer.trimStringToWidth(getText(), j, true).length();
+                pseudoLineScrollOffset -= fontRenderer.trimStringToWidth(getText(), j, true).length();
             }
 
             if (position > k) {

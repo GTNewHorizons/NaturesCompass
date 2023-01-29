@@ -1,5 +1,17 @@
 package com.chaosthedude.naturescompass.gui;
 
+import java.util.*;
+
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
+
+import org.lwjgl.input.Keyboard;
+
 import com.chaosthedude.naturescompass.NaturesCompass;
 import com.chaosthedude.naturescompass.items.ItemNaturesCompass;
 import com.chaosthedude.naturescompass.network.PacketCompassSearch;
@@ -10,17 +22,9 @@ import com.chaosthedude.naturescompass.util.BiomeSearchWorker;
 import com.chaosthedude.naturescompass.util.BiomeUtils;
 import com.chaosthedude.naturescompass.util.EnumCompassState;
 import com.chaosthedude.naturescompass.util.PlayerUtils;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import java.util.*;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
-import org.lwjgl.input.Keyboard;
 
 @SideOnly(Side.CLIENT)
 public class GuiNaturesCompass extends GuiScreen {
@@ -40,11 +44,7 @@ public class GuiNaturesCompass extends GuiScreen {
     private GuiListBiomes selectionList;
     private ISortingCategory sortingCategory;
 
-    public GuiNaturesCompass(
-            World world,
-            EntityPlayer player,
-            ItemStack stack,
-            ItemNaturesCompass natureCompass,
+    public GuiNaturesCompass(World world, EntityPlayer player, ItemStack stack, ItemNaturesCompass natureCompass,
             List<BiomeGenBase> allowedBiomes) {
         this.world = world;
         this.player = player;
@@ -87,8 +87,8 @@ public class GuiNaturesCompass extends GuiScreen {
                 biomesEntry.viewInfo();
             } else if (button == sortByButton) {
                 sortingCategory = sortingCategory.next();
-                sortByButton.displayString =
-                        I18n.format("string.naturescompass.sortBy") + ": " + sortingCategory.getLocalizedName();
+                sortByButton.displayString = I18n.format("string.naturescompass.sortBy") + ": "
+                        + sortingCategory.getLocalizedName();
                 selectionList.refreshList();
             } else if (button == cancelButton) {
                 mc.displayGuiScreen(null);
@@ -132,14 +132,13 @@ public class GuiNaturesCompass extends GuiScreen {
     }
 
     public void searchForBiome(BiomeGenBase biome) {
-        NaturesCompass.network.sendToServer(
-                new PacketCompassSearch(biome.biomeID, (int) player.posX, (int) player.posZ));
+        NaturesCompass.network
+                .sendToServer(new PacketCompassSearch(biome.biomeID, (int) player.posX, (int) player.posZ));
         mc.displayGuiScreen(null);
     }
 
     public void updateBiomesEntry() {
-        if (BiomeSearchWorker.completedSearch
-                && (BiomeSearchWorker.oldDimensionId == world.provider.dimensionId)
+        if (BiomeSearchWorker.completedSearch && (BiomeSearchWorker.oldDimensionId == world.provider.dimensionId)
                 && (BiomeSearchWorker.availableBiomes != null)) {
             allowedBiomes = biomesMatchingSearch = new ArrayList<BiomeGenBase>(BiomeSearchWorker.availableBiomes);
         }
@@ -170,50 +169,52 @@ public class GuiNaturesCompass extends GuiScreen {
                     biomeMatching.add(biome);
                 }
             }
-        } else if (category.equals(
-                        I18n.format("string.naturescompass.baseHeight").toLowerCase())
+        } else if (category.equals(I18n.format("string.naturescompass.baseHeight").toLowerCase())
                 || category.equals("bh")) {
-            for (BiomeGenBase biome : allowedBiomes) {
-                if (String.valueOf(biome.rootHeight).contains(value)) {
-                    biomeMatching.add(biome);
-                }
-            }
-        } else if (category.equals(
-                        I18n.format("string.naturescompass.heightVariation").toLowerCase())
-                || category.equals("hv")) {
-            for (BiomeGenBase biome : allowedBiomes) {
-                if (String.valueOf(biome.heightVariation).contains(value)) {
-                    biomeMatching.add(biome);
-                }
-            }
-        } else if (category.equals(I18n.format("string.naturescompass.rainfall").toLowerCase())
-                || category.equals("rain")) {
-            for (BiomeGenBase biome : allowedBiomes) {
-                if (String.valueOf(biome.rainfall).contains(value)) {
-                    biomeMatching.add(biome);
-                }
-            }
-        } else if (category.equals(
-                        I18n.format("string.naturescompass.temperature").toLowerCase())
-                || category.equals("temp")) {
-            for (BiomeGenBase biome : allowedBiomes) {
-                if (String.valueOf(biome.temperature).contains(value)) {
-                    biomeMatching.add(biome);
-                }
-            }
-        } else if (category.equals(I18n.format("string.naturescompass.humidity").toLowerCase())) {
-            for (BiomeGenBase biome : allowedBiomes) {
-                if (BiomeUtils.getBiomeHumidity(biome).toLowerCase().contains(value)) {
-                    biomeMatching.add(biome);
-                }
-            }
-        } else if (category.equals(I18n.format("string.naturescompass.tags").toLowerCase()) || category.equals("tag")) {
-            for (BiomeGenBase biome : allowedBiomes) {
-                if (BiomeUtils.getListBiomeTags(biome).contains(value)) {
-                    biomeMatching.add(biome);
-                }
-            }
-        }
+                    for (BiomeGenBase biome : allowedBiomes) {
+                        if (String.valueOf(biome.rootHeight).contains(value)) {
+                            biomeMatching.add(biome);
+                        }
+                    }
+                } else
+            if (category.equals(I18n.format("string.naturescompass.heightVariation").toLowerCase())
+                    || category.equals("hv")) {
+                        for (BiomeGenBase biome : allowedBiomes) {
+                            if (String.valueOf(biome.heightVariation).contains(value)) {
+                                biomeMatching.add(biome);
+                            }
+                        }
+                    } else
+                if (category.equals(I18n.format("string.naturescompass.rainfall").toLowerCase())
+                        || category.equals("rain")) {
+                            for (BiomeGenBase biome : allowedBiomes) {
+                                if (String.valueOf(biome.rainfall).contains(value)) {
+                                    biomeMatching.add(biome);
+                                }
+                            }
+                        } else
+                    if (category.equals(I18n.format("string.naturescompass.temperature").toLowerCase())
+                            || category.equals("temp")) {
+                                for (BiomeGenBase biome : allowedBiomes) {
+                                    if (String.valueOf(biome.temperature).contains(value)) {
+                                        biomeMatching.add(biome);
+                                    }
+                                }
+                            } else
+                        if (category.equals(I18n.format("string.naturescompass.humidity").toLowerCase())) {
+                            for (BiomeGenBase biome : allowedBiomes) {
+                                if (BiomeUtils.getBiomeHumidity(biome).toLowerCase().contains(value)) {
+                                    biomeMatching.add(biome);
+                                }
+                            }
+                        } else if (category.equals(I18n.format("string.naturescompass.tags").toLowerCase())
+                                || category.equals("tag")) {
+                                    for (BiomeGenBase biome : allowedBiomes) {
+                                        if (BiomeUtils.getListBiomeTags(biome).contains(value)) {
+                                            biomeMatching.add(biome);
+                                        }
+                                    }
+                                }
         return biomeMatching;
     }
 
@@ -228,7 +229,8 @@ public class GuiNaturesCompass extends GuiScreen {
 
             if (arrayText.length == 1 && arrayPart.length == 1) {
                 biomeMatchingTemp1 = findMatchedBiomes(
-                        getSortingCategory().getLocalizedName().toLowerCase(), arrayPart[0]);
+                        getSortingCategory().getLocalizedName().toLowerCase(),
+                        arrayPart[0]);
             } else if (arrayPart.length == 2) {
                 biomeMatchingTemp1 = findMatchedBiomes(arrayPart[0], arrayPart[1]);
             }
@@ -256,16 +258,17 @@ public class GuiNaturesCompass extends GuiScreen {
     private void setupButtons() {
         buttonList.clear();
         cancelButton = addButton(new GuiTransparentButton(0, 10, height - 30, 110, 20, I18n.format("gui.cancel")));
-        sortByButton = addButton(new GuiTransparentButton(
-                1,
-                10,
-                90,
-                110,
-                20,
-                I18n.format("string.naturescompass.sortBy") + ": " + sortingCategory.getLocalizedName()));
+        sortByButton = addButton(
+                new GuiTransparentButton(
+                        1,
+                        10,
+                        90,
+                        110,
+                        20,
+                        I18n.format("string.naturescompass.sortBy") + ": " + sortingCategory.getLocalizedName()));
         infoButton = addButton(new GuiTransparentButton(2, 10, 65, 110, 20, I18n.format("string.naturescompass.info")));
-        searchButton =
-                addButton(new GuiTransparentButton(3, 10, 40, 110, 20, I18n.format("string.naturescompass.search")));
+        searchButton = addButton(
+                new GuiTransparentButton(3, 10, 40, 110, 20, I18n.format("string.naturescompass.search")));
         teleportButton = addButton(
                 new GuiTransparentButton(4, 10, height - 55, 110, 20, I18n.format("string.naturescompass.teleport")));
 

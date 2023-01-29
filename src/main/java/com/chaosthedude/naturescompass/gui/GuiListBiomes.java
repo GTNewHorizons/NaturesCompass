@@ -1,13 +1,17 @@
 package com.chaosthedude.naturescompass.gui;
 
-import com.google.common.collect.Lists;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.List;
+
 import javax.annotation.Nullable;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.world.biome.BiomeGenBase;
+
+import com.google.common.collect.Lists;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiListBiomes extends GuiListExtended {
@@ -16,13 +20,7 @@ public class GuiListBiomes extends GuiListExtended {
     private final List<GuiListBiomesEntry> entries = Lists.<GuiListBiomesEntry>newArrayList();
     private int selectedIndex = -1;
 
-    public GuiListBiomes(
-            GuiNaturesCompass guiNaturesCompass,
-            Minecraft mc,
-            int width,
-            int height,
-            int top,
-            int bottom,
+    public GuiListBiomes(GuiNaturesCompass guiNaturesCompass, Minecraft mc, int width, int height, int top, int bottom,
             int slotHeight) {
         super(mc, width, height, top, bottom, slotHeight);
         this.guiNaturesCompass = guiNaturesCompass;

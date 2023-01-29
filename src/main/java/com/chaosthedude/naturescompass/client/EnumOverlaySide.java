@@ -1,6 +1,7 @@
 package com.chaosthedude.naturescompass.client;
 
 public enum EnumOverlaySide {
+
     TOPLEFT,
     TOPRIGHT,
     BOTTOMLEFT,

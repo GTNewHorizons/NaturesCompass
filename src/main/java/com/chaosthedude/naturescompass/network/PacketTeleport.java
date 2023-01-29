@@ -1,16 +1,18 @@
 package com.chaosthedude.naturescompass.network;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+
 import com.chaosthedude.naturescompass.NaturesCompass;
 import com.chaosthedude.naturescompass.items.ItemNaturesCompass;
 import com.chaosthedude.naturescompass.util.EnumCompassState;
 import com.chaosthedude.naturescompass.util.PlayerUtils;
+
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 
 public class PacketTeleport implements IMessage {
 
@@ -23,6 +25,7 @@ public class PacketTeleport implements IMessage {
     public void toBytes(ByteBuf buf) {}
 
     public static class Handler implements IMessageHandler<PacketTeleport, IMessage> {
+
         @Override
         public IMessage onMessage(PacketTeleport packet, MessageContext ctx) {
             final ItemStack stack = ctx.getServerHandler().playerEntity.getHeldItem();

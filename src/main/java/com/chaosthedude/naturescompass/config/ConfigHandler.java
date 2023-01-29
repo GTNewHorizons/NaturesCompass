@@ -1,15 +1,18 @@
 package com.chaosthedude.naturescompass.config;
 
-import com.chaosthedude.naturescompass.NaturesCompass;
-import com.chaosthedude.naturescompass.client.EnumOverlaySide;
-import com.google.common.collect.Lists;
-import cpw.mods.fml.client.event.ConfigChangedEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import java.io.File;
 import java.util.List;
+
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+
+import com.chaosthedude.naturescompass.NaturesCompass;
+import com.chaosthedude.naturescompass.client.EnumOverlaySide;
+import com.google.common.collect.Lists;
+
+import cpw.mods.fml.client.event.ConfigChangedEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class ConfigHandler {
 
@@ -36,23 +39,29 @@ public class ConfigHandler {
     public static void init() {
         String comment;
 
-        comment =
-                "The maximum distance the compass will search. Raising this value will increase search accuracy but will potentially make the process more resource intensive.";
-        maxSearchDistance =
-                loadInt(Configuration.CATEGORY_GENERAL, "naturescompass.distanceModifier", comment, maxSearchDistance);
+        comment = "The maximum distance the compass will search. Raising this value will increase search accuracy but will potentially make the process more resource intensive.";
+        maxSearchDistance = loadInt(
+                Configuration.CATEGORY_GENERAL,
+                "naturescompass.distanceModifier",
+                comment,
+                maxSearchDistance);
 
-        comment =
-                "The space between samples taken by the compass when searching. Lowering this value will increase search accuracy but will make the process more resource intensive.";
-        sampleSpace =
-                loadInt(Configuration.CATEGORY_GENERAL, "naturescompass.sampleSpaceModifier", comment, sampleSpace);
+        comment = "The space between samples taken by the compass when searching. Lowering this value will increase search accuracy but will make the process more resource intensive.";
+        sampleSpace = loadInt(
+                Configuration.CATEGORY_GENERAL,
+                "naturescompass.sampleSpaceModifier",
+                comment,
+                sampleSpace);
 
         comment = "The maximum samples to be taken when searching for a biome.";
         maxSamples = loadInt(Configuration.CATEGORY_GENERAL, "naturescompass.maxSamples", comment, maxSamples);
 
-        comment =
-                "A list of biomes that the compass will not be able to search for. Specify by resource location (ex: Ocean) or ID (ex: 0)";
+        comment = "A list of biomes that the compass will not be able to search for. Specify by resource location (ex: Ocean) or ID (ex: 0)";
         biomeBlacklist = loadStringArray(
-                Configuration.CATEGORY_GENERAL, "naturescompass.biomeBlacklist", comment, biomeBlacklist);
+                Configuration.CATEGORY_GENERAL,
+                "naturescompass.biomeBlacklist",
+                comment,
+                biomeBlacklist);
 
         comment = "Displays Nature's Compass information even while chat is open.";
         displayWithChatOpen = loadBool("client", "naturescompass.displayWithChatOpen", comment, displayWithChatOpen);
@@ -106,6 +115,7 @@ public class ConfigHandler {
     }
 
     public static class ChangeListener {
+
         @SubscribeEvent
         public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
             if (event.modID.equals(NaturesCompass.MODID)) {

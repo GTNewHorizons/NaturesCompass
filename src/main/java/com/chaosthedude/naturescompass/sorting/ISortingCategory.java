@@ -1,6 +1,7 @@
 package com.chaosthedude.naturescompass.sorting;
 
 import java.util.Comparator;
+
 import net.minecraft.world.biome.BiomeGenBase;
 
 public interface ISortingCategory extends Comparator<BiomeGenBase> {

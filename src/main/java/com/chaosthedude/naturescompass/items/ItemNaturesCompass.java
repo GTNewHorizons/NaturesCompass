@@ -1,13 +1,5 @@
 package com.chaosthedude.naturescompass.items;
 
-import com.chaosthedude.naturescompass.NaturesCompass;
-import com.chaosthedude.naturescompass.network.PacketRequestSync;
-import com.chaosthedude.naturescompass.util.BiomeSearchWorker;
-import com.chaosthedude.naturescompass.util.BiomeUtils;
-import com.chaosthedude.naturescompass.util.EnumCompassState;
-import com.chaosthedude.naturescompass.util.ItemUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -22,6 +14,16 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+
+import com.chaosthedude.naturescompass.NaturesCompass;
+import com.chaosthedude.naturescompass.network.PacketRequestSync;
+import com.chaosthedude.naturescompass.util.BiomeSearchWorker;
+import com.chaosthedude.naturescompass.util.BiomeUtils;
+import com.chaosthedude.naturescompass.util.EnumCompassState;
+import com.chaosthedude.naturescompass.util.ItemUtils;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemNaturesCompass extends Item {
 
@@ -268,8 +270,7 @@ public class ItemNaturesCompass extends Item {
 
     @SideOnly(Side.CLIENT)
     private double getFrameRotation(EntityItemFrame itemFrame) {
-        return (double)
-                clampAngle(180 + itemFrame.hangingDirection * 90); // itemFrame.facingDirection.getHorizontalIndex()
+        return (double) clampAngle(180 + itemFrame.hangingDirection * 90); // itemFrame.facingDirection.getHorizontalIndex()
         // *
         // 90);
     }

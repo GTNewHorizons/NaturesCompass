@@ -1,12 +1,13 @@
 package com.chaosthedude.naturescompass.gui;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+
 import com.chaosthedude.naturescompass.NaturesCompass;
 import com.chaosthedude.naturescompass.items.ItemNaturesCompass;
 import com.chaosthedude.naturescompass.util.BiomeUtils;
 import cpw.mods.fml.common.network.IGuiHandler;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 
 public class GuiHandler implements IGuiHandler {
 
@@ -15,7 +16,11 @@ public class GuiHandler implements IGuiHandler {
         final ItemStack stack = player.getHeldItem();
         if (stack != null && stack.getItem() == NaturesCompass.naturesCompass) {
             return new GuiNaturesCompass(
-                    world, player, stack, (ItemNaturesCompass) stack.getItem(), BiomeUtils.getAllowedBiomes());
+                    world,
+                    player,
+                    stack,
+                    (ItemNaturesCompass) stack.getItem(),
+                    BiomeUtils.getAllowedBiomes());
         }
 
         return null;

@@ -1,6 +1,5 @@
 /*
- * Minecraft Forge - Forge Development LLC
- * SPDX-License-Identifier: LGPL-2.1-only
+ * Minecraft Forge - Forge Development LLC SPDX-License-Identifier: LGPL-2.1-only
  */
 
 package com.chaosthedude.naturescompass.util;
@@ -9,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorldWorkerManager {
+
     private static List<IWorker> workers = new ArrayList<IWorker>();
     private static long startTime = -1;
     private static int index = 0;
@@ -58,11 +58,12 @@ public class WorldWorkerManager {
     }
 
     public static interface IWorker {
+
         boolean hasWork();
 
         /**
-         * Perform a task, returning true from this will have the manager call this function again this tick if there is time left.
-         * Returning false will skip calling this worker until next tick.
+         * Perform a task, returning true from this will have the manager call this function again this tick if there is
+         * time left. Returning false will skip calling this worker until next tick.
          */
         boolean doWork();
     }

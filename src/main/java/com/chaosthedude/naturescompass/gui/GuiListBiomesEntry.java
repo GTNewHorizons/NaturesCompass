@@ -1,8 +1,5 @@
 package com.chaosthedude.naturescompass.gui;
 
-import com.chaosthedude.naturescompass.util.BiomeUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiListExtended;
@@ -10,6 +7,11 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.BiomeGenBase;
+
+import com.chaosthedude.naturescompass.util.BiomeUtils;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiListBiomesEntry implements GuiListExtended.IGuiListEntry {
@@ -28,16 +30,8 @@ public class GuiListBiomesEntry implements GuiListExtended.IGuiListEntry {
     }
 
     @Override
-    public void drawEntry(
-            int slotIndex,
-            int x,
-            int y,
-            int listWidth,
-            int slotHeight,
-            Tessellator tessellator,
-            int mouseX,
-            int mouseY,
-            boolean isSelected) {
+    public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, Tessellator tessellator,
+            int mouseX, int mouseY, boolean isSelected) {
         String precipitationState = I18n.format("string.naturescompass.none");
         if (biome.getEnableSnow()) {
             precipitationState = I18n.format("string.naturescompass.snow");

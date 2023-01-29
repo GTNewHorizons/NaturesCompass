@@ -1,13 +1,15 @@
 package com.chaosthedude.naturescompass.network;
 
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+
 import com.chaosthedude.naturescompass.NaturesCompass;
 import com.chaosthedude.naturescompass.items.ItemNaturesCompass;
+
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 
 public class PacketCompassSearch implements IMessage {
 
@@ -42,6 +44,7 @@ public class PacketCompassSearch implements IMessage {
     }
 
     public static class Handler implements IMessageHandler<PacketCompassSearch, IMessage> {
+
         @Override
         public IMessage onMessage(PacketCompassSearch packet, MessageContext ctx) {
             final ItemStack stack = ctx.getServerHandler().playerEntity.getHeldItem();
@@ -49,7 +52,12 @@ public class PacketCompassSearch implements IMessage {
                 final ItemNaturesCompass natureCompass = (ItemNaturesCompass) stack.getItem();
                 final World world = ctx.getServerHandler().playerEntity.worldObj;
                 natureCompass.searchForBiome(
-                        world, ctx.getServerHandler().playerEntity, packet.biomeID, packet.x, packet.z, stack);
+                        world,
+                        ctx.getServerHandler().playerEntity,
+                        packet.biomeID,
+                        packet.x,
+                        packet.z,
+                        stack);
             }
 
             return null;

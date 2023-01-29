@@ -1,8 +1,9 @@
 package com.chaosthedude.naturescompass.util;
 
-import com.chaosthedude.naturescompass.NaturesCompass;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+
+import com.chaosthedude.naturescompass.NaturesCompass;
 
 public class ItemUtils {
 

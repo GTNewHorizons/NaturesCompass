@@ -1,11 +1,12 @@
 package com.chaosthedude.naturescompass.util;
 
-import com.chaosthedude.naturescompass.client.EnumOverlaySide;
-import com.chaosthedude.naturescompass.client.RenderTickHandler;
-import com.chaosthedude.naturescompass.config.ConfigHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
+
+import com.chaosthedude.naturescompass.client.EnumOverlaySide;
+import com.chaosthedude.naturescompass.client.RenderTickHandler;
+import com.chaosthedude.naturescompass.config.ConfigHandler;
 
 public class RenderUtils {
 

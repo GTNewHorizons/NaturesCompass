@@ -1,14 +1,17 @@
 package com.chaosthedude.naturescompass.gui;
 
-import com.chaosthedude.naturescompass.util.BiomeUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.List;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.world.biome.BiomeGenBase;
+
+import com.chaosthedude.naturescompass.util.BiomeUtils;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiBiomeInfo extends GuiScreen {
@@ -133,9 +136,21 @@ public class GuiBiomeInfo extends GuiScreen {
 
     private void setupButtons() {
         buttonList.clear();
-        backButton = addButton(new GuiTransparentButton(
-                0, width / 2 - 154, height - 52, 150, 20, I18n.format("string.naturescompass.back")));
-        searchButton = addButton(new GuiTransparentButton(
-                1, width / 2 + 4, height - 52, 150, 20, I18n.format("string.naturescompass.search")));
+        backButton = addButton(
+                new GuiTransparentButton(
+                        0,
+                        width / 2 - 154,
+                        height - 52,
+                        150,
+                        20,
+                        I18n.format("string.naturescompass.back")));
+        searchButton = addButton(
+                new GuiTransparentButton(
+                        1,
+                        width / 2 + 4,
+                        height - 52,
+                        150,
+                        20,
+                        I18n.format("string.naturescompass.search")));
     }
 }

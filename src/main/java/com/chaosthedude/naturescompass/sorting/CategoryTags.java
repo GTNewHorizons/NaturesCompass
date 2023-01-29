@@ -1,8 +1,9 @@
 package com.chaosthedude.naturescompass.sorting;
 
-import com.chaosthedude.naturescompass.util.BiomeUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.world.biome.BiomeGenBase;
+
+import com.chaosthedude.naturescompass.util.BiomeUtils;
 
 public class CategoryTags implements ISortingCategory {
 
