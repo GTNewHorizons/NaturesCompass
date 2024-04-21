@@ -51,6 +51,7 @@ public class PacketCompassSearch implements IMessage {
             if (stack != null && stack.getItem() == NaturesCompass.naturesCompass) {
                 final ItemNaturesCompass natureCompass = (ItemNaturesCompass) stack.getItem();
                 final World world = ctx.getServerHandler().playerEntity.worldObj;
+
                 natureCompass.searchForBiome(
                         world,
                         ctx.getServerHandler().playerEntity,

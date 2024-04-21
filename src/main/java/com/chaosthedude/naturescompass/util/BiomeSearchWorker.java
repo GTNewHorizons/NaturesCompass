@@ -3,7 +3,7 @@ package com.chaosthedude.naturescompass.util;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
@@ -12,6 +12,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import com.chaosthedude.naturescompass.NaturesCompass;
 import com.chaosthedude.naturescompass.config.ConfigHandler;
 import com.chaosthedude.naturescompass.items.ItemNaturesCompass;
+import com.chaosthedude.naturescompass.network.PacketAvailableBiomesSet;
 
 public class BiomeSearchWorker implements WorldWorkerManager.IWorker {
 
@@ -23,23 +24,19 @@ public class BiomeSearchWorker implements WorldWorkerManager.IWorker {
     public int nextLength;
     public EnumFacing direction;
     public ItemStack stack;
-    public EntityPlayer player;
+    public EntityPlayerMP player;
     public int x;
     public int z;
     public int length;
     public boolean finished;
     public int lastRadiusThreshold;
-    public static Set<BiomeGenBase> availableBiomes = new HashSet<BiomeGenBase>();
-    public static int oldDimensionId = 0;
-    public static int newDimensionId;
-    public static boolean completedSearch = false;
+    public Set<BiomeGenBase> availableBiomes = new HashSet<>();
 
-    public BiomeSearchWorker(World world, EntityPlayer player, ItemStack stack, BiomeGenBase biome, int startX,
-            int startZ) {
+    public BiomeSearchWorker(World world, EntityPlayerMP player, ItemStack stack, int biomeID, int startX, int startZ) {
         this.world = world;
         this.player = player;
         this.stack = stack;
-        this.biome = biome;
+        this.biome = biomeID == -1 ? null : BiomeGenBase.getBiome(biomeID);
         x = startX;
         z = startZ;
         sampleSpace = ConfigHandler.sampleSpace;
@@ -50,23 +47,15 @@ public class BiomeSearchWorker implements WorldWorkerManager.IWorker {
         direction = EnumFacing.UP;
         finished = false;
         lastRadiusThreshold = 0;
-        newDimensionId = world.provider.dimensionId;
     }
 
     public void start() {
-        if (stack != null && stack.getItem() == NaturesCompass.naturesCompass) {
-            if (!completedSearch || (oldDimensionId != newDimensionId)) {
-                completedSearch = false;
-                oldDimensionId = newDimensionId;
-                availableBiomes.clear();
-            }
-            if (maxDistance > 0 && sampleSpace > 0) {
-                NaturesCompass.logger
-                        .info("Starting search: " + sampleSpace + " sample space, " + maxDistance + " max distance");
-                WorldWorkerManager.addWorker(this);
-            } else {
-                finish(false);
-            }
+        if (maxDistance > 0 && sampleSpace > 0) {
+            NaturesCompass.logger
+                    .info("Starting search: " + sampleSpace + " sample space, " + maxDistance + " max distance");
+            WorldWorkerManager.addWorker(this);
+        } else {
+            finish(false);
         }
     }
 
@@ -92,7 +81,6 @@ public class BiomeSearchWorker implements WorldWorkerManager.IWorker {
             availableBiomes.add(biomeAtPos);
             if (biomeAtPos == biome) {
                 finish(true);
-                return false;
             }
 
             samples++;
@@ -129,11 +117,11 @@ public class BiomeSearchWorker implements WorldWorkerManager.IWorker {
             } else {
                 NaturesCompass.logger.info("Search failed: " + getRadius() + " radius, " + samples + " samples");
                 ((ItemNaturesCompass) stack.getItem()).setNotFound(stack, player, roundRadius(getRadius(), 500));
-                completedSearch = true;
             }
         } else {
-            NaturesCompass.logger.error("Invalid compass after search");
+            NaturesCompass.network.sendTo(new PacketAvailableBiomesSet(availableBiomes), player);
         }
+
         finished = true;
     }
 
