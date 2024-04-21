@@ -10,7 +10,11 @@ import org.apache.logging.log4j.Logger;
 import com.chaosthedude.naturescompass.config.ConfigHandler;
 import com.chaosthedude.naturescompass.gui.GuiHandler;
 import com.chaosthedude.naturescompass.items.ItemNaturesCompass;
-import com.chaosthedude.naturescompass.network.*;
+import com.chaosthedude.naturescompass.network.PacketAvailableBiomesSet;
+import com.chaosthedude.naturescompass.network.PacketCompassSearch;
+import com.chaosthedude.naturescompass.network.PacketRequestSync;
+import com.chaosthedude.naturescompass.network.PacketSync;
+import com.chaosthedude.naturescompass.network.PacketTeleport;
 import com.chaosthedude.naturescompass.proxy.CommonProxy;
 
 import cpw.mods.fml.common.Mod;
