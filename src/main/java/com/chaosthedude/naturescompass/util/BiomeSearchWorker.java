@@ -118,8 +118,9 @@ public class BiomeSearchWorker implements WorldWorkerManager.IWorker {
                 NaturesCompass.logger.info("Search failed: " + getRadius() + " radius, " + samples + " samples");
                 ((ItemNaturesCompass) stack.getItem()).setNotFound(stack, player, roundRadius(getRadius(), 500));
             }
-        } else {
-            NaturesCompass.network.sendTo(new PacketAvailableBiomesSet(availableBiomes), player);
+
+            if (biome == null)
+                NaturesCompass.network.sendTo(new PacketAvailableBiomesSet(availableBiomes), player);
         }
 
         finished = true;
