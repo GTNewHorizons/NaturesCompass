@@ -121,13 +121,7 @@ public class GuiNaturesCompass extends GuiScreen {
                     availableBiomes = worker.availableBiomes;
                 }
 
-                if (((GuiCheckBox) button).isChecked()) {
-                    baseBiomeList = new ArrayList<>(availableBiomes);
-                } else {
-                    baseBiomeList = allowedBiomes;
-                }
-                processSearchTerm();
-                selectionList.refreshList();
+                updateListState();
             }
         }
     }
@@ -275,6 +269,16 @@ public class GuiNaturesCompass extends GuiScreen {
         Collections.sort(biomes, sortingCategory);
 
         return biomes;
+    }
+
+    public void updateListState() {
+        if (availableCheckBox.isChecked()) {
+            baseBiomeList = new ArrayList<>(availableBiomes);
+        } else {
+            baseBiomeList = allowedBiomes;
+        }
+        processSearchTerm();
+        selectionList.refreshList();
     }
 
     @SuppressWarnings("unchecked")

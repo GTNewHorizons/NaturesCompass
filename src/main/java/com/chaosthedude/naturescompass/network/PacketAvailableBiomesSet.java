@@ -47,7 +47,9 @@ public class PacketAvailableBiomesSet implements IMessage {
         @Override
         public IMessage onMessage(PacketAvailableBiomesSet message, MessageContext ctx) {
             if (Minecraft.getMinecraft().currentScreen instanceof GuiNaturesCompass) {
-                ((GuiNaturesCompass) Minecraft.getMinecraft().currentScreen).availableBiomes = message.biomes;
+                GuiNaturesCompass gui = ((GuiNaturesCompass) Minecraft.getMinecraft().currentScreen);
+                gui.availableBiomes = message.biomes;
+                gui.updateListState();
             }
             return null;
         }
