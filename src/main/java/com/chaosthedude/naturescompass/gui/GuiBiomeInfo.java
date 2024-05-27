@@ -93,7 +93,7 @@ public class GuiBiomeInfo extends GuiScreen {
     protected void actionPerformed(GuiButton button) {
         if (button.enabled) {
             if (button == searchButton) {
-                parentScreen.searchForBiome(biome);
+                parentScreen.searchForBiome(biome.biomeID);
             } else if (button == backButton) {
                 mc.displayGuiScreen(parentScreen);
             }

@@ -7,13 +7,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
 
 import com.chaosthedude.naturescompass.NaturesCompass;
 import com.chaosthedude.naturescompass.network.PacketRequestSync;
@@ -56,7 +56,6 @@ public class ItemNaturesCompass extends Item {
             player.openGui(NaturesCompass.instance, 0, world, 0, 0, 0);
         } else {
             setState(stack, EnumCompassState.INACTIVE, player);
-            BiomeSearchWorker.completedSearch = false;
         }
 
         return stack;
@@ -94,10 +93,13 @@ public class ItemNaturesCompass extends Item {
         return true;
     }
 
-    public void searchForBiome(World world, EntityPlayer player, int biomeID, int x, int z, ItemStack stack) {
-        setState(stack, EnumCompassState.SEARCHING, player);
-        setBiomeID(stack, biomeID, player);
-        BiomeSearchWorker worker = new BiomeSearchWorker(world, player, stack, BiomeGenBase.getBiome(biomeID), x, z);
+    public void searchForBiome(World world, EntityPlayerMP player, int biomeID, int x, int z, ItemStack stack) {
+        if (biomeID != -1) {
+            setState(stack, EnumCompassState.SEARCHING, player);
+            setBiomeID(stack, biomeID, player);
+        }
+
+        BiomeSearchWorker worker = new BiomeSearchWorker(world, player, stack, biomeID, x, z);
         worker.start();
     }
 

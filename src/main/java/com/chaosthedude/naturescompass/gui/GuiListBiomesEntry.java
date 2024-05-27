@@ -73,7 +73,7 @@ public class GuiListBiomesEntry implements GuiListExtended.IGuiListEntry {
     public void selectBiome() {
         mc.getSoundHandler()
                 .playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
-        guiNaturesCompass.searchForBiome(biome);
+        guiNaturesCompass.searchForBiome(biome.biomeID);
     }
 
     public void viewInfo() {
