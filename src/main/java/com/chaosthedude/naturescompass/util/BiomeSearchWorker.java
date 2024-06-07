@@ -81,6 +81,7 @@ public class BiomeSearchWorker implements WorldWorkerManager.IWorker {
             availableBiomes.add(biomeAtPos);
             if (biomeAtPos == biome) {
                 finish(true);
+                return false;
             }
 
             samples++;
