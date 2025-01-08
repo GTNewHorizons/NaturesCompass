@@ -37,12 +37,17 @@ public class PacketTeleport implements IMessage {
                         final int x = natureCompass.getFoundBiomeX(stack);
                         final int z = natureCompass.getFoundBiomeZ(stack);
                         int y = 256;
-                        while (player.worldObj.isAirBlock(x, y - 1, z)) {
+                        if (!player.worldObj.blockExists(x, y, z)) {
+                            player.worldObj.getChunkProvider().loadChunk(x >> 4, z >> 4);
+                        }
+                        while (player.worldObj.isAirBlock(x, y - 1, z) && y >= 0) {
                             y--;
                         }
 
-                        player.mountEntity((Entity) null);
-                        player.setPositionAndUpdate(x, y, z);
+                        if (y >= 0) {
+                            player.mountEntity((Entity) null);
+                            player.setPositionAndUpdate(x, y, z);
+                        }
                     }
                 } else {
                     NaturesCompass.logger.warn(
