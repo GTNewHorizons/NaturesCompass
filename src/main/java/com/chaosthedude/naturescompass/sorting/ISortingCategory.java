@@ -7,11 +7,11 @@ import net.minecraft.world.biome.BiomeGenBase;
 public interface ISortingCategory extends Comparator<BiomeGenBase> {
 
     @Override
-    public int compare(BiomeGenBase biome1, BiomeGenBase biome2);
+    int compare(BiomeGenBase biome1, BiomeGenBase biome2);
 
-    public Object getValue(BiomeGenBase biome);
+    Object getValue(BiomeGenBase biome);
 
-    public ISortingCategory next();
+    ISortingCategory next();
 
-    public String getLocalizedName();
+    String getLocalizedName();
 }
