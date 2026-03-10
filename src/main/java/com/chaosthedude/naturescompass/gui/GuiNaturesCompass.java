@@ -178,6 +178,7 @@ public class GuiNaturesCompass extends GuiScreen {
     private Set<BiomeGenBase> findMatchedBiomes(String category, String value) {
         Set<BiomeGenBase> biomeMatching = new HashSet<>();
 
+        // spotless:off spotless breaks the formatting here for whatever reason
         if (category.equals(I18n.format("string.naturescompass.name").toLowerCase())) {
             for (BiomeGenBase biome : baseBiomeList) {
                 if (BiomeUtils.getBiomeName(biome).toLowerCase().contains(value)) {
@@ -228,6 +229,7 @@ public class GuiNaturesCompass extends GuiScreen {
                 }
             }
         }
+        // spotless:on
         return biomeMatching;
     }
 
