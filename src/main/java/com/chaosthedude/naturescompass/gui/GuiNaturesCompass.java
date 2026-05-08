@@ -176,9 +176,9 @@ public class GuiNaturesCompass extends GuiScreen {
     }
 
     private Set<BiomeGenBase> findMatchedBiomes(String category, String value) {
+        Set<BiomeGenBase> biomeMatching = new HashSet<>();
 
-        Set<BiomeGenBase> biomeMatching = new HashSet<BiomeGenBase>();
-
+        // spotless:off spotless breaks the formatting here for whatever reason
         if (category.equals(I18n.format("string.naturescompass.name").toLowerCase())) {
             for (BiomeGenBase biome : baseBiomeList) {
                 if (BiomeUtils.getBiomeName(biome).toLowerCase().contains(value)) {
@@ -191,75 +191,74 @@ public class GuiNaturesCompass extends GuiScreen {
                     biomeMatching.add(biome);
                 }
             }
-        } else if (category.equals(I18n.format("string.naturescompass.baseHeight").toLowerCase())
-                || category.equals("bh")) {
-                    for (BiomeGenBase biome : baseBiomeList) {
-                        if (String.valueOf(biome.rootHeight).contains(value)) {
-                            biomeMatching.add(biome);
-                        }
-                    }
-                } else
-            if (category.equals(I18n.format("string.naturescompass.heightVariation").toLowerCase())
-                    || category.equals("hv")) {
-                        for (BiomeGenBase biome : baseBiomeList) {
-                            if (String.valueOf(biome.heightVariation).contains(value)) {
-                                biomeMatching.add(biome);
-                            }
-                        }
-                    } else
-                if (category.equals(I18n.format("string.naturescompass.rainfall").toLowerCase())
-                        || category.equals("rain")) {
-                            for (BiomeGenBase biome : baseBiomeList) {
-                                if (String.valueOf(biome.rainfall).contains(value)) {
-                                    biomeMatching.add(biome);
-                                }
-                            }
-                        } else
-                    if (category.equals(I18n.format("string.naturescompass.temperature").toLowerCase())
-                            || category.equals("temp")) {
-                                for (BiomeGenBase biome : baseBiomeList) {
-                                    if (String.valueOf(biome.temperature).contains(value)) {
-                                        biomeMatching.add(biome);
-                                    }
-                                }
-                            } else
-                        if (category.equals(I18n.format("string.naturescompass.humidity").toLowerCase())) {
-                            for (BiomeGenBase biome : baseBiomeList) {
-                                if (BiomeUtils.getBiomeHumidity(biome).toLowerCase().contains(value)) {
-                                    biomeMatching.add(biome);
-                                }
-                            }
-                        } else if (category.equals(I18n.format("string.naturescompass.tags").toLowerCase())
-                                || category.equals("tag")) {
-                                    for (BiomeGenBase biome : baseBiomeList) {
-                                        if (BiomeUtils.getListBiomeTags(biome).contains(value)) {
-                                            biomeMatching.add(biome);
-                                        }
-                                    }
-                                }
+        } else if (category.equals(I18n.format("string.naturescompass.baseHeight").toLowerCase()) || category.equals("bh")) {
+            for (BiomeGenBase biome : baseBiomeList) {
+                if (String.valueOf(biome.rootHeight).contains(value)) {
+                    biomeMatching.add(biome);
+                }
+            }
+        } else if (category.equals(I18n.format("string.naturescompass.heightVariation").toLowerCase()) || category.equals("hv")) {
+            for (BiomeGenBase biome : baseBiomeList) {
+                if (String.valueOf(biome.heightVariation).contains(value)) {
+                    biomeMatching.add(biome);
+                }
+            }
+        } else if (category.equals(I18n.format("string.naturescompass.rainfall").toLowerCase()) || category.equals("rain")) {
+            for (BiomeGenBase biome : baseBiomeList) {
+                if (String.valueOf(biome.rainfall).contains(value)) {
+                    biomeMatching.add(biome);
+                }
+            }
+        } else if (category.equals(I18n.format("string.naturescompass.temperature").toLowerCase()) || category.equals("temp")) {
+            for (BiomeGenBase biome : baseBiomeList) {
+                if (String.valueOf(biome.temperature).contains(value)) {
+                    biomeMatching.add(biome);
+                }
+            }
+        } else if (category.equals(I18n.format("string.naturescompass.humidity").toLowerCase())) {
+            for (BiomeGenBase biome : baseBiomeList) {
+                if (BiomeUtils.getBiomeHumidity(biome).toLowerCase().contains(value)) {
+                    biomeMatching.add(biome);
+                }
+            }
+        } else if (category.equals(I18n.format("string.naturescompass.tags").toLowerCase()) || category.equals("tag")) {
+            for (BiomeGenBase biome : baseBiomeList) {
+                if (BiomeUtils.getListBiomeTags(biome).stream()
+                    .anyMatch(tag -> tag.toLowerCase().contains(value))) {
+                    biomeMatching.add(biome);
+                }
+            }
+        }
+        // spotless:on
         return biomeMatching;
     }
 
     public void processSearchTerm() {
         String text = searchTextField.getText().toLowerCase();
         String[] arrayText = text.trim().split("\\s*,\\s*");
-        Set<BiomeGenBase> biomeMatchingTemp2 = new HashSet<>(baseBiomeList);
+        String nameCategory = I18n.format("string.naturescompass.name").toLowerCase();
+        Set<BiomeGenBase> matching = new HashSet<>(baseBiomeList);
 
         for (String part : arrayText) {
             String[] arrayPart = part.trim().split("\\s*:\\s*", 2);
-            Set<BiomeGenBase> biomeMatchingTemp1 = new HashSet<BiomeGenBase>();
 
             if (arrayText.length == 1 && arrayPart.length == 1) {
-                biomeMatchingTemp1 = findMatchedBiomes(
-                        getSortingCategory().getLocalizedName().toLowerCase(),
-                        arrayPart[0]);
-            } else if (arrayPart.length == 2) {
-                biomeMatchingTemp1 = findMatchedBiomes(arrayPart[0], arrayPart[1]);
-            }
-            biomeMatchingTemp2.retainAll(biomeMatchingTemp1);
-        }
-        biomesMatchingSearch = new ArrayList<>(biomeMatchingTemp2);
+                Set<BiomeGenBase> matchingName = findMatchedBiomes(nameCategory, arrayPart[0]);
 
+                if (!(getSortingCategory() instanceof CategoryName)) {
+                    Set<BiomeGenBase> matchingCategory = findMatchedBiomes(
+                            getSortingCategory().getLocalizedName().toLowerCase(),
+                            arrayPart[0]);
+                    matchingName.addAll(matchingCategory);
+                }
+
+                matching.retainAll(matchingName);
+            } else if (arrayPart.length == 2) {
+                matching.retainAll(findMatchedBiomes(arrayPart[0], arrayPart[1]));
+            }
+        }
+
+        biomesMatchingSearch = new ArrayList<>(matching);
         selectionList.refreshList();
     }
 
