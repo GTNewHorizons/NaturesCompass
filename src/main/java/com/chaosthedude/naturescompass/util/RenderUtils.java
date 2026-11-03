@@ -4,6 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 
+import com.chaosthedude.naturescompass.NaturesCompass;
+import com.chaosthedude.naturescompass.client.DashboardHud;
 import com.chaosthedude.naturescompass.client.EnumOverlaySide;
 import com.chaosthedude.naturescompass.client.RenderTickHandler;
 import com.chaosthedude.naturescompass.config.ConfigHandler;
@@ -14,6 +16,7 @@ public class RenderUtils {
     private static final FontRenderer fontRenderer = mc.fontRenderer;
 
     public static void drawLineOffsetStringOnHUD(String string, int xOffset, int yOffset, int color, int lineOffset) {
+        if (NaturesCompass.dashboardLoaded && !DashboardHud.beginBiomeInfo()) return;
         final ScaledResolution resolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 
         if (ConfigHandler.overlaySide == EnumOverlaySide.TOPLEFT) {
@@ -40,6 +43,7 @@ public class RenderUtils {
                     color,
                     ConfigHandler.lineOffset + lineOffset);
         }
+        if (NaturesCompass.dashboardLoaded) DashboardHud.endRender();
     }
 
     public static void drawStringOnHUD(String string, int xOffset, int yOffset, int color, int lineOffset) {
