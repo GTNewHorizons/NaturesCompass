@@ -17,6 +17,7 @@ import com.chaosthedude.naturescompass.network.PacketSync;
 import com.chaosthedude.naturescompass.network.PacketTeleport;
 import com.chaosthedude.naturescompass.proxy.CommonProxy;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -32,6 +33,7 @@ import cpw.mods.fml.relauncher.Side;
         modid = NaturesCompass.MODID,
         name = NaturesCompass.NAME,
         version = NaturesCompass.VERSION,
+        dependencies = "after:dashboard@[1.0.2,)",
         acceptedMinecraftVersions = "[1.7.10]")
 public class NaturesCompass {
 
@@ -45,6 +47,7 @@ public class NaturesCompass {
     public static ItemNaturesCompass naturesCompass;
 
     public static boolean canTeleport;
+    public static boolean dashboardLoaded;
 
     @Instance(MODID)
     public static NaturesCompass instance;
@@ -68,6 +71,7 @@ public class NaturesCompass {
         network.registerMessage(PacketRequestSync.Handler.class, PacketRequestSync.class, 3, Side.SERVER);
         network.registerMessage(PacketSync.Handler.class, PacketSync.class, 4, Side.CLIENT);
 
+        dashboardLoaded = Loader.isModLoaded("dashboard");
         proxy.registerEvents();
         proxy.registerModels();
     }
